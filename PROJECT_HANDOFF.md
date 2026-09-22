@@ -1,5 +1,9 @@
 # PROJECT HANDOFF — BLOQUE vastgoed website
 
+## Update — 23 September 2026: Dutch navigation and logo clearance
+
+The overlay menu now reads Visie, Aanbod, Werkwijze, Impressie, Contact. Visie targets `#intro`; the other items retain `#approach`, `#cases`, `#agency`, `#contact`. Removed a duplicate divider. Header CSS v4 reserves the fixed logo height plus 32–72px breathing room before the first item. Menu type scales to fit narrower screens; short screens can scroll the panel. Desktop/mobile checks confirm all five targets exist, the menu closes on selection, and the first row clears the logo without horizontal overflow.
+
 ## Update — 23 September 2026: hero social buttons
 
 Replaced the three award marks at the bottom-right of the hero with TikTok, LinkedIn and Instagram. Twitter is omitted. The outlined circles retain the former award row’s 3.5em height (minimum 44px) and adapt to the light hero background. SVG platform symbols and motion were inspected on https://www.monks.com/what-we-do. The icon exits right over 0.2s (power2.in), resets offscreen left and returns over 0.5s (power2.out); the circle stays still. Existing GSAP drives the effect in `bloque-socials.js`; keyboard focus also animates, and reduced-motion preferences skip it.
