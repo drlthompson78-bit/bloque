@@ -1322,6 +1322,9 @@ function initMediaSetup() {
     const video = mediaEl.querySelector("[data-media-video-src]");
     if (!video) return;
 
+    const mobileSource = video.dataset.mediaVideoMobileSrc;
+    const mobileViewport = mobileSource ? window.matchMedia("(max-width: 767px)") : null;
+
     const mode = mediaEl.dataset.mediaMode || "autoplay";
     const touchMode = mediaEl.dataset.mediaTouchMode;
     const resetAttr = mediaEl.dataset.mediaReset;
@@ -1368,7 +1371,7 @@ function initMediaSetup() {
     const loadVideo = () => {
       if (hasLoaded) return;
 
-      const src = video.dataset.mediaVideoSrc;
+      const src = mobileViewport?.matches ? mobileSource : video.dataset.mediaVideoSrc;
       if (!src) return;
 
       video.muted = true;
@@ -1490,6 +1493,20 @@ function initMediaSetup() {
       }
       if (shouldResume()) playVideo();
     };
+
+    if (mobileViewport) {
+      on(mobileViewport, "change", () => {
+        if (!hasLoaded) return;
+        clearPauseTimer();
+        shouldBePlaying = false;
+        video.pause();
+        video.removeAttribute("src");
+        video.load();
+        hasLoaded = false;
+        setStatus("paused");
+        if (shouldResume()) playVideo();
+      });
+    }
 
     mediaEl.dataset.mediaStatus = "not-active";
 

@@ -1,5 +1,11 @@
 # PROJECT HANDOFF — BLOQUE vastgoed website
 
+## Update — 23 September 2026: Impressie videos
+
+The former Working at KRAVT section (`#agency`, linked from Impressie) now has the visible heading Impressie. Its background video uses the supplied `slide-00.mp4` (1920×1080), saved as `bloque-impressie.mp4`, and `slide-00-mobile.mp4` (720×960), saved as `bloque-impressie-mobile.mp4`. Both originals are unchanged, H.264, 46.2 seconds. Posters were extracted from their first frames. The existing media initializer selects the mobile source at widths ≤767px, swaps sources when crossing that breakpoint, and retains lazy loading, muted looping inline playback, offscreen pause and page visibility behavior. Only this video has the new mobile-source attribute.
+
+Validation: source files copied without re-encoding, desktop and mobile currentSrc/video dimensions/playback checked in-browser, breakpoint switching confirmed, JavaScript syntax and git diff checks passed.
+
 ## Update — 23 September 2026: Dutch navigation and logo clearance
 
 The overlay menu now reads Visie, Aanbod, Werkwijze, Impressie, Contact. Visie targets `#intro`; the other items retain `#approach`, `#cases`, `#agency`, `#contact`. Removed a duplicate divider. Header CSS v4 reserves the fixed logo height plus 32–72px breathing room before the first item. Menu type scales to fit narrower screens; short screens can scroll the panel. Desktop/mobile checks confirm all five targets exist, the menu closes on selection, and the first row clears the logo without horizontal overflow.
