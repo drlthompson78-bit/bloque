@@ -1,5 +1,13 @@
 # PROJECT HANDOFF — BLOQUE vastgoed website
 
+## Update — 23 September 2026: hero social buttons
+
+Replaced the three award marks at the bottom-right of the hero with TikTok, LinkedIn and Instagram. Twitter is omitted. The outlined circles retain the former award row’s 3.5em height (minimum 44px) and adapt to the light hero background. SVG platform symbols and motion were inspected on https://www.monks.com/what-we-do. The icon exits right over 0.2s (power2.in), resets offscreen left and returns over 0.5s (power2.out); the circle stays still. Existing GSAP drives the effect in `bloque-socials.js`; keyboard focus also animates, and reduced-motion preferences skip it.
+
+The user explicitly requested no profile links yet. All three are native `type="button"` controls with accessible platform names and `aria-disabled="true"`, with no click handler or navigation. Add actual URLs only when supplied. Styles are in `bloque-socials.css`.
+
+Validation: desktop 1280×900 and mobile 390×844; circles remain right-aligned with no horizontal overflow; pointer/focus motion runs and clicks leave the URL unchanged. JavaScript syntax and `git diff --check` pass. DOM comparison confirms all other page markup is unchanged.
+
 ## Update — 23 September 2026: BLOQUE contact page
 
 Replaced the orange KRAVT contact/footer with a light contact section at `#contact`. The reference layout has the heading “Benieuwd wat wij kunnen betekenen?”, a form on the left and Rotterdam map/address on the right, stacked on mobile. It uses the existing Helvetica Now fonts and a floor-only render from the approved hero scene. `scene/render_contact_background.py` reproduces `dist/assets/bloque-contact-floor.jpg` without changing the hero .blend or animation. Run Blender 3.6 with `--background --gpu-backend opengl --factory-startup --python scene/render_contact_background.py`.

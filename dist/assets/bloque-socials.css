@@ -1,0 +1,38 @@
+.bloque-hero-socials {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .4em;
+}
+
+.bloque-social {
+  /* Match the former hero award row's 3.5em height. */
+  width: max(44px, 3.5em);
+  height: max(44px, 3.5em);
+  flex: none;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(25, 27, 32, .35);
+  border-radius: 50%;
+  overflow: hidden;
+  background: transparent;
+  color: #191b20;
+  font: inherit;
+  cursor: default;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bloque-social__icon {
+  display: block;
+  width: 120%;
+  height: 120%;
+  max-width: none;
+  pointer-events: none;
+}
+
+.bloque-social:focus-visible {
+  outline: 2px solid #ff4600;
+  outline-offset: 4px;
+}
