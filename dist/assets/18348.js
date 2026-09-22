@@ -33,6 +33,8 @@ function initLoader() {
     duration: durationDefault
   }, 0.1);
 
+  tl.call(() => window.dispatchEvent(new Event('bloque:hero-revealed')));
+
 }
 
 // Animation - Page Leave
@@ -238,6 +240,7 @@ function delay(n) {
  * Fire all scripts on page load
  */
 function initScript() {
+  window.BloqueSinkingLogo?.init();
   initCheckWindowHeight();
   initBasicFunctions();
   initLenisCheckScrollUpDown();
@@ -1673,4 +1676,3 @@ function initBunnyPlayerBackground() {
     if (p && typeof p.then === 'function') p.catch(function(){});
   }
 }
-
