@@ -48,24 +48,54 @@ def curve(name, contours, extrude):
     obj=bpy.data.objects.new(name,data);scene.collection.objects.link(obj)
     return obj
 
+def glyph_solid(name, letter, extrude):
+    # Q shares O's round body. Its tail is one straight, constant-width bar;
+    # Arial's curved tail is deliberately not used for the mark.
+    obj=curve(name,GLYPHS['O' if letter=='Q' else letter],extrude)
+    if letter!='Q':return obj
+    start=Vector((.105,-.17));end=Vector((.595,-.68))
+    axis=(end-start).normalized();side=Vector((-axis.y,axis.x))*.102
+    contour=[list(start+side),list(start-side),list(end-side),list(end+side)]
+    bar=curve(name+' straight tail',[contour],extrude)
+    for part in [obj,bar]:
+        bpy.ops.object.select_all(action='DESELECT')
+        part.select_set(True);bpy.context.view_layer.objects.active=part
+        bpy.ops.object.convert(target='MESH');part.select_set(False)
+    bpy.context.view_layer.objects.active=obj;obj.select_set(True)
+    union=obj.modifiers.new('Straight Q tail union','BOOLEAN')
+    union.operation='UNION';union.solver='EXACT';union.object=bar
+    bpy.ops.object.modifier_apply(modifier=union.name)
+    bpy.data.objects.remove(bar,do_unlink=True)
+    obj.select_set(False)
+    return obj
+
 letters={}
 cutters=[]
 for i,letter in enumerate('BLOQUE'):
     y=(2.5-i)*1.65
-    obj=curve('Letter '+letter,GLYPHS[letter],.09)
+    obj=glyph_solid('Letter '+letter,letter,.09)
     obj.location=(0,y,.09)
     obj.data.materials.append(graphite)
     bpy.context.view_layer.objects.active=obj;obj.select_set(True)
     bpy.ops.object.convert(target='MESH');obj.select_set(False)
     for p in obj.data.polygons:p.use_smooth=abs(p.normal.z)<.5
+    if hasattr(obj.data,'use_auto_smooth'):
+        obj.data.use_auto_smooth=True
+        obj.data.auto_smooth_angle=math.radians(30)
+    if letter=='Q':
+        tail_axis=Vector((.49,-.51,0)).normalized()
+        tail_side=Vector((-tail_axis.y,tail_axis.x,0))
+        for p in obj.data.polygons:
+            if abs(p.normal.dot(tail_axis))>.9999 or abs(p.normal.dot(tail_side))>.9999:
+                p.use_smooth=False
     bevel=obj.modifiers.new('Soft manufactured edges','BEVEL')
-    bevel.width=.006;bevel.segments=3
+    bevel.width=.004;bevel.segments=3
     bevel.limit_method='ANGLE';bevel.angle_limit=.52
     normal=obj.modifiers.new('Weighted face normals','WEIGHTED_NORMAL')
     normal.keep_sharp=True;normal.weight=40
     letters[letter]=obj
     if letter in 'LQ':
-        cut=curve('Exact '+letter+' floor opening',GLYPHS[letter],.65)
+        cut=glyph_solid('Exact '+letter+' floor opening',letter,.65)
         cut.location=(0,y,0)
         bpy.context.view_layer.objects.active=cut;cut.select_set(True)
         bpy.ops.object.convert(target='MESH');cut.select_set(False)
@@ -132,12 +162,12 @@ def light(name,kind,location,energy,size=1,target=(0,0,0)):
     obj=bpy.data.objects.new(name,data);scene.collection.objects.link(obj);obj.location=location
     obj.rotation_euler=(Vector(target)-obj.location).to_track_quat('-Z','Y').to_euler()
     return obj
-light('Large softbox • upper right','AREA',(7,4,10),350,5)
-light('Soft front fill','AREA',(-5,-8,7),100,8)
-light('Directional daylight','SUN',(7,4,10),.75,.15)
+light('Large softbox • upper right','AREA',(7,4,10),350,4)
+light('Soft front fill','AREA',(-5,-8,7),70,8)
+light('Directional daylight','SUN',(7,4,10),2.9,.09)
 world=bpy.data.worlds.new('Neutral studio ambient');world.use_nodes=True
 world.node_tree.nodes.get('Background').inputs['Color'].default_value=(1,1,1,1)
-world.node_tree.nodes.get('Background').inputs['Strength'].default_value=.8
+world.node_tree.nodes.get('Background').inputs['Strength'].default_value=.35
 scene.world=world
 
 scene.frame_set(1)

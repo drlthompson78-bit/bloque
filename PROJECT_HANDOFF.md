@@ -1,16 +1,18 @@
 # PROJECT HANDOFF — BLOQUE vastgoed website
 
-## Update — 22 September 2026: one real 3D scene
+## Update — 22 September 2026: sharper 4K hero and straight Q tail
 
-This update supersedes the older hosting and hero details below. The active Site is `appgprj_6ab244a5ea748191a4b6407688b3cc1e`, privately hosted at `https://bloque-vastgoed.drl-thompson78.chatgpt.site`. Use `.openai/hosting.json` and fresh Sites metadata as the authority.
+This supersedes the older hosting and hero details below. The active owner-private Site is `appgprj_6ab244a5ea748191a4b6407688b3cc1e` at `https://bloque-vastgoed.drl-thompson78.chatgpt.site`. Use `.openai/hosting.json` and fresh Sites metadata as the authority.
 
-The user rejected both canvas-overlay versions for inconsistent letter forms, material and unrealistic recesses. That module has been removed. The new hero comes from one editable Blender scene containing all six letters, matching L/Q floor holes, a single camera and shared materials/lights. See `scene/README.md` for the source, rebuild commands and timeline. This is a 3D reconstruction, not the original KRAVT asset; do not claim pixel-identical equivalence.
+The user found the first real 3D version too soft and noticed a curved Q tail. The new Q is the same round body as O joined to a straight rectangular diagonal, with matching floor geometry. Its tail side faces remain flat. Curve sampling increased from 12 to 32 subdivisions, normals preserve hard corners, and the edge bevel is 4 mm. All letters still share one matte graphite material. Stronger directional light with lower ambient fill separates top and side faces while keeping the light floor.
 
-`dist/assets/bloque-hero-playback.js` plays `bloque-3d-sinking.mp4` after the page entrance. It has a 1.5-second raised hold, then L followed by Q. It retains the final video frame, pauses offscreen, and supplies the rendered recessed JPG for reduced motion or playback failure. The narrow-screen crop keeps the letter stack in view. The existing headline, descriptor, Hallo and vertical BLOQUE® transition are preserved.
+Production is now 3840 × 1584, 24 fps, 192 frames (8 seconds), with up to 64 Cycles samples, a minimum of 16 adaptive samples, accurate denoising and a 0.75-pixel filter. Full raised and recessed proof renders were compared before animation. The fixed camera permits reuse of stationary pixels while L/Q and nearby shadows are ray traced at full quality. The page still waits about 1.5 seconds after its entrance, lowers L followed by Q, and keeps the final video frame. Reduced motion and playback errors use the matching final still.
 
-Validation: all 192 rendered frames decode at 1920 × 792; the final H.264 video is 8 seconds / 24 fps / approximately 295 KB. Browser playback reached the held final frame without console errors. Desktop (1600 × 900), narrow (800 × 900), and mobile (390 × 844) framing were visually checked. The playback checks cover entrance gating, visibility pause/resume, final-frame retention, reduced motion and error fallback.
+Delivery media are `dist/assets/bloque-3d-sinking-4k.mp4`, `bloque-3d-raised-4k.jpg` and `bloque-3d-recessed-4k.jpg`. Versioned filenames avoid stale video caches. The headline, descriptor, Hallo and vertical BLOQUE® transition are preserved.
 
-The production authority is `scene/bloque-studio.blend` plus the rendered video. The optional 3D Jutsu project `2892a976-6562-4b6d-a5a8-5030af396c64`, revision 2, is an editable cloud copy with a lightweight Eevee preview; its GLB viewer lighting differs from the production render. Visual acceptance remains with the user.
+Validation: all 192 frames decode at the delivery resolution; all 136 moving frames passed the stationary-material audit. Cycles persistent data is disabled after it caused dark material patches in three ending frames; those frames and the ending hold were rebuilt. The assembled final frame closely matches an independently rendered full-frame proof (mean difference 0.066/255). The 1.1 MB H.264 video was checked in the browser at 1600 × 900, including the corrected ending, with a straight Q tail and consistent matte surfaces.
+
+The production authority is `scene/bloque-studio.blend` and the scripts in `scene/README.md`. The 3D Jutsu project `2892a976-6562-4b6d-a5a8-5030af396c64`, revision 2, is an older reference copy: it does not yet include this straight-tail/sharpness revision. This remains a reconstruction, not the original KRAVT model; do not claim exact photographic equivalence. Visual acceptance remains with the user.
 
 ## 1. Project identity
 

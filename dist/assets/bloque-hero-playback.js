@@ -11,7 +11,7 @@
       if (!video) return;
       const image = video.parentElement.querySelector('img.cover-image');
       let revealed = false, visible = true, ended = false, disposed = false;
-      const finalImage = './assets/bloque-3d-recessed.jpg';
+      const finalImage = './assets/bloque-3d-recessed-4k.jpg';
       function settle() {
         ended = true;
         video.pause();

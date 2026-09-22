@@ -1,9 +1,9 @@
 """Portable local renderer for the same editable scene as the cloud project."""
-import bpy,json
+import bpy,json,os
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent.parent
 GLYPHS=json.loads((ROOT/'scene/glyphs.json').read_text())
-out=ROOT/'work/blender/previews';out.mkdir(parents=True,exist_ok=True)
+out=ROOT/'work/blender/sharp-v2/previews';out.mkdir(parents=True,exist_ok=True)
 class Artifact:
     def __init__(self,name):self.path=out/name
     def publish(self):print('RENDERED',str(self.path),flush=True)
@@ -14,7 +14,7 @@ bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=Fals
 source=(ROOT/'scene/build_scene.py').read_text()
 if bpy.app.version<(4,0,0):
     source='\n'.join(line for line in source.splitlines() if not line.startswith('scene.eevee.'))
-    source=source.replace("scene.render.engine='BLENDER_EEVEE'", "scene.render.engine='CYCLES'\nscene.cycles.samples=24\nscene.cycles.use_denoising=True\nscene.cycles.device='CPU'")
+    source=source.replace("scene.render.engine='BLENDER_EEVEE'", "scene.render.engine='CYCLES'\nscene.cycles.samples=64\nscene.cycles.use_denoising=True\nscene.cycles.device='CPU'\nscene.cycles.use_adaptive_sampling=True\nscene.cycles.adaptive_threshold=.02\nscene.cycles.adaptive_min_samples=16\nscene.cycles.filter_width=.75")
     source=source.replace("'Khronos PBR Neutral'", "'Standard'")
     start=source.index('    for layer in action.layers:')
     end=source.index('\n# Small floor crosses',start)
@@ -26,6 +26,10 @@ if bpy.app.version<(4,0,0):
 elif bpy.app.version<(5,0,0):
     source=source.replace("'BLENDER_EEVEE'","'BLENDER_EEVEE_NEXT'")
 source=source.replace("scene.render.image_settings.media_type='IMAGE'", "pass") if not hasattr(bpy.context.scene.render.image_settings,'media_type') else source
-source=source.replace('resolution_x=1280','resolution_x=960').replace('resolution_y=528','resolution_y=396')
+source=source.replace('resolution_x=1280','resolution_x=1920').replace('resolution_y=528','resolution_y=792')
+if os.environ.get('BLOQUE_SKIP_PREVIEWS')=='1':
+    start=source.index("for name,frame in [('raised.png',1),('recessed.png',192)]:")
+    end=source.index("result=",start)
+    source=source[:start]+"scene.frame_set(1)\n"+source[end:]
 exec(compile(source,str(ROOT/'scene/build_scene.py'),'exec'))
 bpy.ops.wm.save_as_mainfile(filepath=str(ROOT/'scene/bloque-studio.blend'))
