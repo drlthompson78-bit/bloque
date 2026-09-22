@@ -1,5 +1,14 @@
 # PROJECT HANDOFF — BLOQUE vastgoed website
 
+## Update — 22 September 2026: six development steps
+
+The former ten-case slider now presents six numbered steps using the user's exact titles and copy: Aankoopanalyse, Businesscase, Herindeling & ontwerp, Vergunningen, Uitvoering and Commerciële afronding. Added the heading “Zes stappen. Regie van aankoop tot afronding.” and supplied introduction above it. “Client” is now “Stap”; the section label is “Onze werkwijze”.
+
+The first three text sub-sliders contain exactly six items, so the existing Mondriaan navigation wraps at 06. All original visual slide markup and colours are preserved for the later image revision; only the first six visual sets are reached by the six-step navigation. Hidden old case links were removed from the text panels. Previous/next controls are native buttons with Dutch accessible labels. `dist/assets/bloque-process.css` allows longer titles to wrap, reserves text space and stacks the copy above the existing visuals on smaller screens.
+
+Validation: exact heading/introduction and six titles/paragraphs checked; media and colour groups are unchanged, as is page content outside this section. Browser testing at 1280 × 720 covered all six steps, 06→01 and 01→06, with matching titles, numbers and paragraphs. At 390 × 844 the longer “Herindeling & ontwerp” title and paragraph fit the panel; controls work by keyboard. `git diff --check` passed.
+
+
 ## Update — 22 September 2026: Dutch introduction and four property specialisms
 
 Replaced the English ethos paragraph with the user's exact Dutch copy beginning “Nederland verandert.” and ending “Samen halen we meer uit wat er al staat.” Its orange button now says “Ontdek onze aanpak” with the existing down-arrow and `#approach` scroll target.

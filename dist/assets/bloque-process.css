@@ -1,0 +1,46 @@
+/* Six property-development steps within the existing animated case slider. */
+.bloque-process__intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+  width: 100%;
+  padding-bottom: 1em;
+}
+.bloque-process__intro h2 {
+  max-width: 17em;
+  margin: 0;
+  font-size: 2.5em;
+  line-height: 1.12;
+  font-weight: 400;
+}
+.bloque-process__intro > p {
+  max-width: 29em;
+  font-size: 1.25em;
+  line-height: 1.5;
+}
+.bloque-process .case-slider { min-height: 34em; }
+.bloque-process .case-slider__name-relative { white-space: normal; }
+.bloque-process .case-slider__info-name { min-height: 4.8em; }
+.bloque-process button.btn-nextprev {
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+.bloque-process button.btn-nextprev:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 5px;
+}
+@media (max-width: 991px) {
+  .bloque-process__intro { grid-template-columns: 1fr; gap: 1.5em; }
+  .bloque-process__intro h2 { font-size: 2.25em; }
+  .bloque-process .case-slider { min-height: 0; }
+  .bloque-process .case-slider__info { position: relative; height: auto; width: 100%; }
+  .bloque-process .case-slider__visuals { position: relative; height: 24em; width: 100%; }
+}
+@media (max-width: 767px) {
+  .bloque-process__intro h2 { font-size: 2em; }
+  .bloque-process__intro > p { font-size: 1.1em; }
+  .bloque-process .case-slider__info-name { min-height: 3.6em; }
+  .bloque-process .case-slider__visuals { height: 20em; }
+}
