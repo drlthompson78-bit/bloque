@@ -1,5 +1,13 @@
 # PROJECT HANDOFF — BLOQUE vastgoed website
 
+## Update — 22 September 2026: continuous L/Q animation
+
+This update supersedes older hosting and hero-animation details below. The active Site is now `appgprj_6ab244a5ea748191a4b6407688b3cc1e`, privately hosted at `https://bloque-vastgoed.drl-thompson78.chatgpt.site`. Use `.openai/hosting.json` and fresh Sites metadata as the authority.
+
+`dist/assets/bloque-sinking-logo.js` animates L then Q after a 1.5-second hold, with 2.85 seconds per letter. The first overlay implementation was rejected for light outlines and a visible shape/material change when handing back to the bitmap. The revised implementation uses shared contours for top faces, sidewalls and recesses, removes the baked bevel locally, and retains the rendered end state. Do not remove the canvas at completion or crossfade back to the original recess; that restores the mismatch. Reduced motion renders the settled state directly. The source hero bitmap and other letters remain intact. This is a reconstructed canvas relief, not an original editable 3D model; do not claim exact photographic equivalence.
+
+QA: local browser start/end inspection, console error check, and offline frame checks at desktop/mobile dimensions in `work/check-sinking-logo.cjs` (untracked). Visual acceptance belongs to the user.
+
 ## 1. Project identity
 
 - **Project name:** BLOQUE vastgoed website (werkversie, oorspronkelijk KRAVT homepage)

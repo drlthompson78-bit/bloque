@@ -1,6 +1,6 @@
-/* L / Q relief animation over the existing 1954 × 805 hero photograph.
- * No image replacement: canvas is removed at rest, revealing the original pixels.
- * Coordinates are tied to bloque-hero-light-v3.png, not to viewport dimensions.
+/* Continuous L / Q relief, registered to the 1954 × 805 hero photograph.
+ * One contour defines the solid, its walls and its opening. Keep the settled
+ * render: switching back to the photographed cavity would change the geometry.
  */
 (() => {
   'use strict';
@@ -17,23 +17,61 @@
   const shapes = [
     {
       name: 'L',
-      path: 'M1294 212 L1319 217 L1284 267 L1370 285 L1366 299 L1249 279 Z',
+      contours: [[[1294,212],[1319,217],[1284,267],[1370,285],[1366,299],[1249,279]]],
       box: [1246, 210, 127, 92],
       elevation: 18,
       depth: 20,
-      ground: ['#f1f2ed', '#e9ebe6'],
       offset: 0,
     },
     {
       name: 'Q',
-      path: 'M1218 397 C1256 393 1291 407 1296 431 C1301 449 1287 465 1267 474 L1281 492 L1263 500 L1244 481 C1214 488 1173 478 1152 463 C1127 445 1136 422 1160 408 C1177 399 1197 397 1218 397 Z M1219 411 C1196 410 1178 419 1171 432 C1162 449 1179 462 1200 465 C1210 468 1221 467 1230 465 L1215 456 L1234 450 L1248 465 C1264 459 1268 446 1264 434 C1259 419 1240 412 1219 411 Z',
       box: [1134, 394, 165, 108],
       elevation: 20,
       depth: 23,
-      ground: ['#f0f1ec', '#e9ebe6'],
       offset: DURATION + GAP,
     },
-  ].map(shape => ({ ...shape, outline: new Path2D(shape.path) }));
+  ];
+
+  // Sample the same cubic contours used by Path2D; no separate approximation
+  // for the sidewalls or the cavity. The inner contour runs in reverse.
+  function cubicContour(start, curves) {
+    const result = [start];
+    let p = start;
+    curves.forEach(c => {
+      for (let i = 1; i <= 20; i++) {
+        const t = i / 20, u = 1 - t;
+        result.push([u*u*u*p[0]+3*u*u*t*c[0]+3*u*t*t*c[2]+t*t*t*c[4],
+          u*u*u*p[1]+3*u*u*t*c[1]+3*u*t*t*c[3]+t*t*t*c[5]]);
+      }
+      p = c.slice(4);
+    });
+    return result;
+  }
+  const qOuter = cubicContour([1218,397], [
+    [1256,393,1291,407,1296,431], [1301,449,1287,465,1267,474],
+  ]);
+  qOuter.push([1281,492],[1263,500],[1244,481]);
+  qOuter.push(...cubicContour([1244,481], [
+    [1214,488,1173,478,1152,463], [1127,445,1136,422,1160,408],
+    [1177,399,1197,397,1218,397],
+  ]).slice(1));
+  const qInner = cubicContour([1219,411], [
+    [1196,410,1178,419,1171,432], [1162,449,1179,462,1200,465],
+    [1210,468,1221,467,1230,465],
+  ]);
+  qInner.push([1215,456],[1234,450],[1248,465]);
+  qInner.push(...cubicContour([1248,465], [
+    [1264,459,1268,446,1264,434], [1259,419,1240,412,1219,411],
+  ]).slice(1));
+  shapes[1].contours = [qOuter, qInner];
+  shapes.forEach(shape => {
+    const outline = new Path2D();
+    shape.contours.forEach(contour => {
+      contour.forEach(([x,y],i) => i ? outline.lineTo(x,y) : outline.moveTo(x,y));
+      outline.closePath();
+    });
+    shape.outline = outline;
+  });
 
   let current = null;
   let revealAt = 0;
@@ -42,7 +80,6 @@
     current?.destroy();
     current = null;
     revealAt = 0;
-    if (reducedMotion.matches) return;
     const img = root.querySelector('.home-header .header-bg img.cover-image');
     if (!img || !img.getAttribute('src').includes('bloque-hero-light-v3.png')) return;
     img.loading = 'eager';
@@ -68,6 +105,7 @@
     let visible = true;
     let dpr = 1;
     let matteTexture = null;
+    let groundPatch = null;
     const intro = document.querySelector('.loading-screen');
 
     function resize() {
@@ -84,74 +122,69 @@
       paint();
     }
 
-    function fillGround(shape, amount) {
-      // Covers the baked recess while the corresponding solid is above the plane.
-      // The small edge stroke covers the photographed white bevel as well.
-      const [x, y, w, h] = shape.box;
-      const ground = ctx.createLinearGradient(x, y, x + w, y + h);
-      ground.addColorStop(0, shape.ground[0]);
-      ground.addColorStop(1, shape.ground[1]);
-      ctx.save();
-      ctx.globalAlpha = amount;
-      ctx.fillStyle = ground;
-      ctx.strokeStyle = ground;
-      ctx.lineWidth = 2;
-      ctx.fill(shape.outline, 'evenodd');
-      ctx.stroke(shape.outline);
-      ctx.restore();
-    }
-
     function drawLetter(shape, progress) {
-      if (progress >= 1) return;
       const travel = smooth(progress);
       const z = -shape.elevation + (shape.elevation + shape.depth) * travel;
       const above = Math.max(0, -z / shape.elevation);
       const [x, y, w, h] = shape.box;
+      ctx.save();
       if (z < 0) {
-        fillGround(shape, 1);
         ctx.save();
-        ctx.translate(-above * 7, -above * 2);
-        ctx.shadowColor = `rgba(8, 10, 11, ${0.32 * above})`;
-        ctx.shadowBlur = (5 + above * 6) * scale;
-        ctx.shadowOffsetX = -above * 13 * scale;
-        ctx.shadowOffsetY = above * 3 * scale;
-        ctx.fillStyle = `rgba(18, 19, 20, ${0.2 * above})`;
+        ctx.shadowColor = `rgba(8,10,11,${0.38 * above})`;
+        ctx.shadowBlur = (2 + above * 9) * scale * dpr;
+        ctx.shadowOffsetX = -above * 17 * scale * dpr;
+        ctx.shadowOffsetY = above * 2 * scale * dpr;
+        ctx.fillStyle = '#27282a';
         ctx.fill(shape.outline, 'evenodd');
         ctx.restore();
-        // Stacked contours form sidewalls whose height really shrinks to zero.
-        ctx.fillStyle = '#191b1c';
-        for (let height = 0; height >= z; height -= 0.75) {
-          ctx.save();
-          ctx.translate(0, height);
-          ctx.fill(shape.outline, 'evenodd');
-          ctx.restore();
-        }
-      }
-      ctx.save();
-      if (z >= 0) {
-        // As the face moves below the surface, its opening masks it. The original
-        // cavity walls become exposed from the top instead of the whole letter fading.
+      } else {
         ctx.clip(shape.outline, 'evenodd');
+        ctx.fillStyle = '#17191a';
+        ctx.fill(shape.outline, 'evenodd');
       }
+
+      // Vertical faces share their endpoints with the top. Lighting changes
+      // with the face normal, avoiding a uniform black, cut-out-looking edge.
+      function walls() {
+        const segments = [];
+        shape.contours.forEach(contour => contour.forEach((a, i) => {
+          const b = contour[(i + 1) % contour.length];
+          segments.push({ a, b, y: (a[1] + b[1]) / 2 });
+        }));
+        segments.sort((a,b) => a.y - b.y);
+        segments.forEach(({a,b}) => {
+          const dx = b[0]-a[0], dy = b[1]-a[1], length = Math.hypot(dx,dy);
+          if (length < 0.01) return;
+          const light = Math.max(0, (dy*0.75+dx*0.3)/length);
+          const value = z < 0 ? 16+24*light : 15+24*(1-light);
+          const wall = ctx.createLinearGradient(0, a[1]+Math.min(z,0), 0, a[1]+Math.max(z,0)+0.01);
+          wall.addColorStop(0, `rgb(${value+5},${value+6},${value+5})`);
+          wall.addColorStop(1, `rgb(${value-7},${value-6},${value-5})`);
+          ctx.fillStyle = wall;
+          ctx.beginPath();
+          // Adjacent faces overlap by a fraction of a pixel to avoid AA seams.
+          const ex=dx/length*0.35, ey=dy/length*0.35;
+          ctx.moveTo(a[0]-ex,a[1]-ey); ctx.lineTo(b[0]+ex,b[1]+ey);
+          ctx.lineTo(b[0]+ex,b[1]+ey+z); ctx.lineTo(a[0]-ex,a[1]-ey+z); ctx.closePath();
+          ctx.fill();
+        });
+      }
+      if (z < 0) walls();
+      ctx.save();
       ctx.translate(0, z);
       const shade = ctx.createLinearGradient(x, y, x + w, y + h);
-      const light = Math.round(55 - Math.max(0, z) * 1.35);
+      const light = Math.round(51 - Math.max(0, z) * 0.7);
       shade.addColorStop(0, `rgb(${light + 5},${light + 6},${light + 5})`);
       shade.addColorStop(1, `rgb(${light - 11},${light - 10},${light - 10})`);
       ctx.fillStyle = shade;
-      // A short, eased handover to the photographed cavity floor ends exactly at
-      // the approved still, without altering any other part of the image.
-      ctx.globalAlpha = 1 - smooth((progress - 0.65) / 0.35);
       ctx.fill(shape.outline, 'evenodd');
       if (matteTexture) {
         ctx.fillStyle = matteTexture;
-        ctx.globalAlpha *= 0.72 * (1 - smooth(Math.max(0, z) / shape.depth));
+        ctx.globalAlpha = 0.18;
         ctx.fill(shape.outline, 'evenodd');
       }
-      ctx.globalAlpha = 0.55 * (1 - smooth((progress - 0.65) / 0.35));
-      ctx.strokeStyle = 'rgba(225,227,224,0.12)';
-      ctx.lineWidth = 0.55;
-      ctx.stroke(shape.outline);
+      ctx.restore();
+      if (z >= 0) walls();
       ctx.restore();
     }
 
@@ -159,6 +192,8 @@
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.setTransform(dpr * scale, 0, 0, dpr * scale, dpr * left, dpr * top);
+      if (!groundPatch) return;
+      ctx.drawImage(groundPatch, 0, 0);
       shapes.forEach(shape => drawLetter(shape,
         Math.max(0, Math.min(1, (elapsed - HOLD - shape.offset) / DURATION))));
     }
@@ -176,8 +211,6 @@
       paint();
       if (elapsed >= HOLD + DURATION * 2 + GAP) {
         finished = true;
-        canvas.remove();
-        resizeObserver.disconnect();
         intersection.disconnect();
         document.removeEventListener('visibilitychange', wake);
         return;
@@ -206,17 +239,76 @@
       document.removeEventListener('visibilitychange', wake);
       canvas.remove();
     }
-    current = { destroy };
+    function settle() {
+      elapsed = HOLD + DURATION * 2 + GAP;
+      finished = true;
+      cancelAnimationFrame(frame);
+      frame = 0;
+      intersection.disconnect();
+      document.removeEventListener('visibilitychange', wake);
+      if (ready) paint();
+    }
+    current = { destroy, settle };
     img.decode().then(() => {
       if (disposed) return;
-      // Reuse a small patch from the raised O's matte top face, instead of
-      // inventing a new glossy material for the two animated letters.
+      // Remove the baked bevel and cavity only beneath these two letters.
+      // Interpolate nearby plane colors; a feathered mask leaves the surrounding
+      // photograph unchanged, including the other four letters.
+      groundPatch = document.createElement('canvas');
+      groundPatch.width = WIDTH; groundPatch.height = HEIGHT;
+      const groundCtx = groundPatch.getContext('2d');
+      groundCtx.drawImage(img, 0, 0);
+      const source = groundCtx.getImageData(0, 0, WIDTH, HEIGHT);
+      groundCtx.clearRect(0,0,WIDTH,HEIGHT);
+      function sample(x,y) {
+        const rgb = [0,0,0]; let count = 0;
+        for (let dy=-5;dy<=5;dy++) for(let dx=-5;dx<=5;dx++) {
+          const at=((y+dy)*WIDTH+x+dx)*4;
+          if(source.data[at]<205) continue;
+          rgb.forEach((_,c)=>rgb[c]+=source.data[at+c]); count++;
+        }
+        return rgb.map(v=>v/Math.max(count,1));
+      }
+      shapes.forEach(shape => {
+        const [x,y,w,h]=shape.box, margin=12;
+        const patch=document.createElement('canvas');
+        patch.width=w+margin*2; patch.height=h+margin*2;
+        const pc=patch.getContext('2d');
+        const pixels=pc.createImageData(patch.width,patch.height);
+        const a=sample(x-16,y+5), b=sample(x+w+16,y+5);
+        const c=sample(x-25,y+h-10), d=sample(x+w+20,y+h-10);
+        for(let py=0;py<patch.height;py++) for(let px=0;px<patch.width;px++) {
+          const tx=px/patch.width, ty=py/patch.height, at=(py*patch.width+px)*4;
+          for(let k=0;k<3;k++) pixels.data[at+k]=(a[k]*(1-tx)+b[k]*tx)*(1-ty)+(c[k]*(1-tx)+d[k]*tx)*ty;
+          pixels.data[at+3]=255;
+        }
+        pc.putImageData(pixels,0,0);
+        const mask=document.createElement('canvas'); mask.width=patch.width; mask.height=patch.height;
+        const mc=mask.getContext('2d');
+        mc.translate(margin-x,margin-y);
+        mc.filter='blur(2px)'; mc.lineWidth=shape.name==='Q' ? 18 : 12; mc.lineJoin='round';
+        mc.fill(shape.outline,'evenodd'); mc.stroke(shape.outline);
+        pc.globalCompositeOperation='destination-in'; pc.drawImage(mask,0,0);
+        groundCtx.drawImage(patch,x-margin,y-margin);
+      });
+
+      // Non-repeating fine matte grain. A fixed seed prevents moving texture.
       const tile = document.createElement('canvas');
-      tile.width = 18;
-      tile.height = 7;
-      tile.getContext('2d').drawImage(img, 1240, 298, 18, 7, 0, 0, 18, 7);
-      matteTexture = ctx.createPattern(tile, 'repeat');
+      tile.width = 256; tile.height = 256;
+      const tc=tile.getContext('2d'), grain=tc.createImageData(256,256);
+      let seed=431;
+      for(let i=0;i<grain.data.length;i+=4) {
+        seed=(Math.imul(seed,1664525)+1013904223)>>>0;
+        const v=25+(seed>>>25);
+        grain.data[i]=v;grain.data[i+1]=v+1;grain.data[i+2]=v;grain.data[i+3]=255;
+      }
+      tc.putImageData(grain,0,0);
+      const soft=document.createElement('canvas'); soft.width=256; soft.height=256;
+      const sc=soft.getContext('2d'); sc.filter='blur(1px)';
+      sc.drawImage(tile,0,0,64,64,0,0,256,256);
+      matteTexture = ctx.createPattern(soft, 'repeat');
       ready = true;
+      if (reducedMotion.matches) settle();
       resize();
       wake();
     }).catch(destroy);
@@ -226,6 +318,6 @@
   window.addEventListener('bloque:hero-revealed', () => { revealAt = performance.now(); });
   reducedMotion.addEventListener('change', () => {
     // Changing accessibility settings settles immediately; no unexpected replay.
-    if (reducedMotion.matches) { current?.destroy(); current = null; }
+    if (reducedMotion.matches) current?.settle();
   });
 })();
