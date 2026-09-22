@@ -1,5 +1,15 @@
 # PROJECT HANDOFF — BLOQUE vastgoed website
 
+## Update — 22 September 2026: orange infill after sinking
+
+The user accepted the sharper 4K scene, then requested the recessed L and Q to fill with site orange until level with the surrounding white floor. Both orange volumes share the exact floor-opening geometry, including the straight Q tail. The Q center stays white. Their un-beveled upper faces stop at z=0; B/O/U/E keep the approved graphite material and height. The orange material uses the site's `--color-primary` (`#FF4600`).
+
+The original sinking sequence is preserved through frame 192 (8 seconds). Orange rises in both recesses over frames 192–264, then holds through frame 288 (12 seconds total, 24 fps, 3840 × 1584). The new video is `dist/assets/bloque-3d-sink-fill-orange-4k.mp4`; the reduced-motion/error still is `bloque-3d-filled-orange-4k.jpg`. The raised opening poster is unchanged. The source and rebuild commands remain in `scene/README.md`.
+
+The initial reveal of the infill pigment eases over frames 206–220, avoiding an abrupt orange flash when its surface first covers the dark letter. The approved six letter meshes and sampled sinking positions were compared against the previous scene. Independent raised/recessed proof images matched the previous proofs within 3/255 (mean difference below 0.001/255), so the approved first 192 frames are reused exactly. Fill geometry was checked to never protrude above z=0 and to end exactly at that height for both letters.
+
+All 288 delivery frames decode at 3840 × 1584. The 72 new moving frames passed the stationary-material audit; no dark material flicker was found. The assembled final frame matched the independent full-frame proof with mean difference 0.041/255 and zero pixels differing by more than 10/255. The MP4 explicitly tags BT.709 primaries/matrix and sRGB transfer (including H.264 VUI metadata), avoiding an unspecified browser color interpretation. Browser playback was checked at 1600 × 900 and reached the 12-second filled ending without errors.
+
 ## Update — 22 September 2026: sharper 4K hero and straight Q tail
 
 This supersedes the older hosting and hero details below. The active owner-private Site is `appgprj_6ab244a5ea748191a4b6407688b3cc1e` at `https://bloque-vastgoed.drl-thompson78.chatgpt.site`. Use `.openai/hosting.json` and fresh Sites metadata as the authority.

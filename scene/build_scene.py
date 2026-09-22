@@ -16,7 +16,7 @@ scene.render.resolution_y=528
 scene.render.resolution_percentage=100
 scene.render.fps=24
 scene.frame_start=1
-scene.frame_end=192
+scene.frame_end=288
 scene.render.film_transparent=False
 scene.view_settings.view_transform='Khronos PBR Neutral'
 scene.view_settings.exposure=-.25
@@ -34,9 +34,33 @@ def material(name, color, roughness):
     mat.diffuse_color=rgba
     return mat
 
+def ease_animation(owner):
+    action=owner.animation_data.action
+    if hasattr(action,'fcurves'):
+        curves=action.fcurves
+    else:
+        curves=[fc for layer in action.layers for strip in layer.strips
+                for bag in strip.channelbags for fc in bag.fcurves]
+    for fcurve in curves:
+        for key in fcurve.keyframe_points:
+            key.interpolation='BEZIER'
+            key.handle_left_type='AUTO_CLAMPED';key.handle_right_type='AUTO_CLAMPED'
+
 graphite=material('Matte graphite • all six letters',(.105,.112,.115),.72)
 floor_mat=material('Warm neutral floor • F3F4EF',(.953,.957,.937),.88)
 grid_mat=material('Subtle registration marks',(.67,.69,.66),.9)
+orange=material('Matte orange infill • site FF4600',(1,70/255,0),.88)
+# Low specular keeps the orange pigment saturated under the existing softboxes.
+orange_shader=orange.node_tree.nodes.get('Principled BSDF')
+specular=orange_shader.inputs.get('Specular IOR Level') or orange_shader.inputs.get('Specular')
+if specular:specular.default_value=.05
+# Ease the pigment in as the rising surface first covers the recessed graphite.
+# This avoids a one-frame orange flash at the instant the two surfaces cross.
+for frame,color in [(1,(.105,.112,.115)),(206,(.105,.112,.115)),
+                    (220,(1,70/255,0)),(288,(1,70/255,0))]:
+    orange_shader.inputs['Base Color'].default_value=tuple(linear(c) for c in color)+(1,)
+    orange_shader.inputs['Base Color'].keyframe_insert(data_path='default_value',frame=frame)
+ease_animation(orange.node_tree)
 
 def curve(name, contours, extrude):
     data=bpy.data.curves.new(name,'CURVE')
@@ -118,16 +142,24 @@ for cut in cutters:
 # The middle of Q belongs to the floor and never moves.
 for letter,start,finish in [('L',37,105),('Q',112,180)]:
     obj=letters[letter]
-    for frame,z in [(1,.09),(start,.09),(finish,-.25),(192,-.25)]:
+    for frame,z in [(1,.09),(start,.09),(finish,-.25),(288,-.25)]:
         obj.location.z=z;obj.keyframe_insert(data_path='location',index=2,frame=frame)
-    action=obj.animation_data.action
-    for layer in action.layers:
-        for strip in layer.strips:
-            for bag in strip.channelbags:
-                for fcurve in bag.fcurves:
-                    for key in fcurve.keyframe_points:
-                        key.interpolation='BEZIER'
-                        key.handle_left_type='AUTO_CLAMPED';key.handle_right_type='AUTO_CLAMPED'
+    ease_animation(obj)
+
+# Orange rises from below the recessed graphite tops, then stops exactly at z=0.
+# The fill uses the same outline as each opening, with no bevel or raised lip.
+# Q's white center island remains part of the floor.
+for letter in 'LQ':
+    fill=glyph_solid('Flush orange infill '+letter,letter,.18)
+    fill.location=(0,letters[letter].location.y,-.36)
+    fill.data.materials.append(orange)
+    bpy.ops.object.select_all(action='DESELECT')
+    bpy.context.view_layer.objects.active=fill;fill.select_set(True)
+    bpy.ops.object.convert(target='MESH');fill.select_set(False)
+    for polygon in fill.data.polygons:polygon.use_smooth=False
+    for frame,z in [(1,-.36),(192,-.36),(264,-.18),(288,-.18)]:
+        fill.location.z=z;fill.keyframe_insert(data_path='location',index=2,frame=frame)
+    ease_animation(fill)
 
 # Small floor crosses live in the same perspective as the type.
 verts=[];faces=[]
@@ -173,11 +205,11 @@ scene.world=world
 scene.frame_set(1)
 scene.render.image_settings.media_type='IMAGE'
 scene.render.image_settings.file_format='PNG'
-for name,frame in [('raised.png',1),('recessed.png',192)]:
+for name,frame in [('raised.png',1),('recessed.png',180),('filled.png',264)]:
     target_file=artifacts.file(name=name,media_type='image/png')
     scene.frame_set(frame);scene.render.filepath=str(target_file.path)
     bpy.ops.render.render(write_still=True);target_file.publish()
 scene.frame_set(1)
 result={'letters':{key:list(obj.dimensions) for key,obj in letters.items()},
-        'frames':[1,37,105,112,180,192],'fps':24,'camera':list(camera.location),
+        'frames':[1,37,105,112,180,192,264,288],'fps':24,'camera':list(camera.location),
         'resolution':[scene.render.resolution_x,scene.render.resolution_y]}

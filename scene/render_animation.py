@@ -1,6 +1,6 @@
 """Render the locked-camera hero at 3840 x 1584, preserving sharp edges.
 
-BLOQUE_RENDER_MODE=proof renders full-resolution raised/recessed proofs only.
+BLOQUE_RENDER_MODE=proof renders full-resolution raised/recessed/filled proofs.
 The animation reuses the static plate and ray traces each moving letter and its
 nearby shadows at exactly the same camera, resolution and Cycles quality.
 """
@@ -8,7 +8,7 @@ import bpy, os, json, subprocess, shutil, time
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent.parent
-OUT=ROOT/'work/blender/sharp-v2'
+OUT=ROOT/'work/blender/orange-v3'
 FRAMES=OUT/'frames';REGIONS=OUT/'regions';PROOFS=OUT/'proofs'
 for path in [FRAMES,REGIONS,PROOFS]:path.mkdir(parents=True,exist_ok=True)
 mode=os.environ.get('BLOQUE_RENDER_MODE','all')
@@ -43,7 +43,7 @@ def render(frame,path):
     os.replace(temporary,path)
 
 if mode!='animation':
-    for frame,name in [(1,'raised-4k.png'),(180,'recessed-4k.png')]:
+    for frame,name in [(1,'raised-4k.png'),(180,'recessed-4k.png'),(264,'filled-4k.png')]:
         path=PROOFS/name
         if not path.exists():render(frame,path)
         print('BLOQUE_PROOF',str(path),flush=True)
@@ -55,8 +55,9 @@ if mode!='proof':
     # Integer pixel bounds in the delivery camera; margins include the changing
     # cast/contact shadows as each solid lowers through the floor.
     stages=[('L',range(38,106),(2160,310,2780,670),FRAMES/'0001.png'),
-            ('Q',range(113,181),(2040,700,2620,1080),FRAMES/'0105.png')]
-    total=136;done=0;started=time.time()
+            ('Q',range(113,181),(2040,700,2620,1080),FRAMES/'0105.png'),
+            ('orange fill',range(193,265),(2040,310,2780,1080),FRAMES/'0180.png')]
+    total=208;done=0;started=time.time()
     for letter,frames,(left,top,right,bottom),reference in stages:
         s.render.use_border=True;s.render.use_crop_to_border=True
         s.render.border_min_x=left/3840;s.render.border_max_x=right/3840
@@ -71,14 +72,15 @@ if mode!='proof':
                     str(right-left),str(bottom-top)],check=True)
             done+=1
             print(f'BLOQUE_FRAME {frame} ({done}/{total}) {time.time()-started:.1f}s',flush=True)
-    for frame in range(1,193):
+    for frame in range(1,289):
         path=FRAMES/f'{frame:04d}.png'
         if path.exists():continue
-        reference=1 if frame<=37 else (105 if frame<=112 else 180)
+        reference=1 if frame<=37 else (105 if frame<=112 else (180 if frame<=192 else 264))
         os.link(FRAMES/f'{reference:04d}.png',path)
     s.render.use_border=False;s.render.use_crop_to_border=False
     s.frame_set(1)
     bpy.ops.wm.save_as_mainfile(filepath=str(ROOT/'scene/bloque-studio.blend'))
-    (FRAMES/'render.json').write_text(json.dumps({'size':[3840,1584],'fps':24,'frames':192,
-        'samples':64,'adaptive_min_samples':16,'filter_width':.75,'L':[37,105],'Q':[112,180]}))
+    (FRAMES/'render.json').write_text(json.dumps({'size':[3840,1584],'fps':24,'frames':288,
+        'samples':64,'adaptive_min_samples':16,'filter_width':.75,'L':[37,105],'Q':[112,180],
+        'orange_fill':[192,264],'floor_height':0,'orange':'#FF4600'}))
     print('BLOQUE_RENDER_COMPLETE',flush=True)
