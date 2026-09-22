@@ -1,5 +1,10 @@
 # PROJECT HANDOFF — BLOQUE vastgoed website
 
+## Update — 22 September 2026: Q-tail refinement and copyright mark
+
+The header Q's orange diagonal now begins inside its counter, is wider and crosses the bowl continuously; this replaces the narrow stroke that appeared detached below the letter. The six base letter contours are unchanged. Added a small outlined © above/right of the E, as requested (distinct from the existing ® in the vertical intro logo). The standalone wordmark and inline SVG share the updated paths. Header width reserves the extra copyright space while preserving the existing letter scale; the CSS reference is bumped to `bloque-header.css?v=2`. Checked enlarged SVG and page views at 1280 × 720 and 390 × 844: both details are sharp and the logo/copyright stay within the header without overlapping the menu.
+
+
 ## Update — 22 September 2026: Helvetica Now page text
 
 All HTML headings, paragraphs, navigation, button labels and inherited body text now use Helvetica Now, the regular and medium text faces verified on monks.com. The fonts are local WOFF2 assets in `dist/assets/fonts/`, applied by `dist/assets/bloque-typography.css` and preloaded in the head. Original text sizes, weights and the three forced hero lines remain. The page initialization in `18348.js` waits for fonts to settle before measuring animated text. The SVG wordmark, Hallo artwork and 3D scene are independent of this typeface change. Browser checks at 1280 × 720 and 390 × 844 confirmed local font requests, applied Helvetica Now styles, the three hero lines and working menu navigation.

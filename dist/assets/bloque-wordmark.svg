@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5282 870" color="#191b20">
-  <title>BLOQUE</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -55 5564 925" color="#191b20">
+  <title>BLOQUE ©</title>
   <g class="bloque-wordmark__letters" fill="currentColor">
     <path d="M646 337C717 310 754 256 754 191C754 76 663 17 505 17H0V729H510C695 729 796 644 796 516C796 429 739 361 646 337ZM539 230C539 265 515 290 469 290H226V172H472C514 172 539 194 539 230ZM226 569V431H493C548 431 579 454 579 499C579 546 546 569 489 569Z"/>
 <path d="M1113 17H887V729H1552V547H1113Z"/>
@@ -8,5 +8,9 @@
 <path d="M4023 752C4284 752 4426 642 4426 416V17H4200V392C4200 510 4143 575 4023 575C3902 575 3845 510 3845 392V17H3619V416C3619 642 3761 752 4023 752Z"/>
 <path d="M4760 447H5210V288H4760V183H5270V17H4534V729H5282V558H4760Z"/>
   </g>
-  <path class="bloque-wordmark__accent" fill="#ff4600" d="M3143,615 3219,523 3524,778 3448,870Z"/>
+  <path class="bloque-wordmark__accent" fill="#ff4600" d="M3031 486L3158 390L3498 748L3371 844Z"/>
+  <g class="bloque-wordmark__copyright" fill="none" stroke="currentColor" stroke-width="18">
+    <circle cx="5460" cy="51" r="90"/>
+    <path d="M5484 25C5478 17 5469 13 5459 13C5438 13 5424 28 5424 50C5424 72 5438 87 5459 87C5469 87 5478 83 5484 75" stroke-linecap="round"/>
+  </g>
 </svg>
