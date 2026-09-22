@@ -1,0 +1,80 @@
+.home-approach__col-number-inner { height: 100%; }
+.home-approach__col-row:has(.bloque-specialism__tagline) {
+  flex-direction: column;
+  gap: .75em;
+}
+.bloque-specialism__tagline {
+  font-size: 1em;
+  line-height: 1.35;
+}
+.bloque-specialism__cta {
+  background: transparent;
+  border: 0;
+  text-align: left;
+  font: inherit;
+}
+.bloque-specialism__cta:focus-visible,
+.bloque-specialism-dialog__close:focus-visible {
+  outline: 2px solid var(--color-primary, #ff4600);
+  outline-offset: 5px;
+}
+html.bloque-reading, html.bloque-reading body { overflow: hidden; }
+.bloque-specialism-dialog {
+  position: fixed;
+  inset: 0;
+  width: min(840px, calc(100% - 48px));
+  max-width: none;
+  max-height: calc(100dvh - 48px);
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: #fff;
+  color: #191b20;
+  font-family: "Helvetica Now", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.bloque-specialism-dialog::backdrop { background: rgb(16 21 22 / 72%); }
+.bloque-specialism-dialog[open] { animation: bloque-read-in .25s ease-out; }
+.bloque-specialism-dialog__bar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 48px;
+  background: #fff;
+  border-bottom: 1px solid #e6e7e3;
+}
+.bloque-specialism-dialog__number { color: #646764; font-size: 13px; letter-spacing: .06em; }
+.bloque-specialism-dialog__close {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: #191b20;
+  font: inherit;
+  font-size: 15px;
+}
+.bloque-specialism-dialog__close span { font-size: 28px; color: var(--color-primary, #ff4600); }
+.bloque-specialism-dialog__content { padding: 40px 48px 48px; }
+.bloque-specialism-dialog h2 { font-size: clamp(30px, 4vw, 48px); line-height: 1.1; margin: 0 0 20px; }
+.bloque-specialism-dialog p { margin: 0 0 24px; }
+.bloque-specialism-dialog p:last-child { margin-bottom: 0; }
+.bloque-specialism-dialog .bloque-specialism-dialog__lead { font-size: 22px; line-height: 1.35; margin-bottom: 32px; }
+@keyframes bloque-read-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 600px) {
+  .bloque-specialism-dialog { width: calc(100% - 24px); max-height: calc(100dvh - 24px); font-size: 16px; }
+  .bloque-specialism-dialog__bar { padding: 12px 20px; }
+  .bloque-specialism-dialog__content { padding: 28px 20px 32px; }
+  .bloque-specialism-dialog .bloque-specialism-dialog__lead { font-size: 20px; }
+}
+@media (prefers-reduced-motion: reduce) { .bloque-specialism-dialog[open] { animation: none; } }

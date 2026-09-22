@@ -1,5 +1,15 @@
 # PROJECT HANDOFF — BLOQUE vastgoed website
 
+## Update — 22 September 2026: Dutch introduction and four property specialisms
+
+Replaced the English ethos paragraph with the user's exact Dutch copy beginning “Nederland verandert.” and ending “Samen halen we meer uit wat er al staat.” Its orange button now says “Ontdek onze aanpak” with the existing down-arrow and `#approach` scroll target.
+
+The approach introduction now begins “Elk pand vraagt om andere keuzes.” Four existing numbered cards now cover Splitsen, Transformeren, Renoveren and Herpositioneren, with the supplied taglines and summaries. Each orange “Lees verder” button opens its corresponding detailed copy in a native modal dialog. The desktop columns, thin dividers, typography and orange CTA styling are retained; buttons align at the bottom of each row. On mobile the cards remain stacked.
+
+`dist/assets/bloque-specialisms.css` and `bloque-specialisms.js` provide the reading panels. Native dialog semantics isolate focus; closing by button or Escape restores focus to the triggering card. The close bar stays visible while scrolling. Panels use the local Helvetica Now font and support reduced motion. Dialog text deliberately contains the detailed paragraphs, while the short summaries stay on the cards.
+
+Validation: exact supplied content checked against the implementation; all four buttons opened the matching panel and restored focus on close; Escape was checked. At 1280 × 720 the full ethos text and CTA fit the existing column and card buttons align. At 390 × 844 cards are stacked, the reading panel has no horizontal overflow, its final paragraph is reachable by scrolling and the close control stays visible. JavaScript syntax and `git diff --check` passed.
+
 ## Update — 22 September 2026: Q-tail refinement and copyright mark
 
 The header Q's orange diagonal now begins inside its counter, is wider and crosses the bowl continuously; this replaces the narrow stroke that appeared detached below the letter. The six base letter contours are unchanged. Added a small outlined © above/right of the E, as requested (distinct from the existing ® in the vertical intro logo). The standalone wordmark and inline SVG share the updated paths. Header width reserves the extra copyright space while preserving the existing letter scale; the CSS reference is bumped to `bloque-header.css?v=2`. Checked enlarged SVG and page views at 1280 × 720 and 390 × 844: both details are sharp and the logo/copyright stay within the header without overlapping the menu.
