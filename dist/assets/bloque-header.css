@@ -1,4 +1,4 @@
-/* Fixed BLOQUE wordmark, aligned with the existing menu control. */
+/* BLOQUE wordmark at the page entrance and in the open navigation. */
 .hamburger__fixed > .container {
   display: flex;
   align-items: center;
@@ -18,7 +18,17 @@
   color: var(--wordmark-ink);
   pointer-events: auto;
   text-decoration: none;
-  transition: color .3s ease;
+  opacity: 1;
+  visibility: visible;
+  transition: color .3s ease, opacity .2s ease, visibility 0s;
+}
+/* The transparent fixed header must not lay the wordmark over page copy.
+   Reuse the page's existing scroll state; keep the logo in the open menu. */
+[data-scrolling-started="true"]:not([data-navigation-status="active"]) .bloque-brand {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: color .3s ease, opacity .2s ease, visibility 0s .2s;
 }
 .bloque-brand svg {
   display: block;
@@ -48,5 +58,6 @@
   .hamburger__fixed > .container { gap: 1em; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .bloque-brand, .bloque-wordmark__accent { transition: none; }
+  .bloque-brand, .bloque-wordmark__accent,
+  [data-scrolling-started="true"]:not([data-navigation-status="active"]) .bloque-brand { transition: none; }
 }

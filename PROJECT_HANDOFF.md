@@ -1,5 +1,12 @@
 # PROJECT HANDOFF — BLOQUE vastgoed website
 
+## Update — 22 September 2026: prevent header logo overlapping copy
+
+The transparent fixed header no longer leaves the BLOQUE wordmark over section labels and headings. `bloque-header.css?v=3` uses the existing `data-scrolling-started` state: after scrolling beyond the top threshold the logo fades out, becomes hidden and stops receiving pointer/focus input. It reappears at the page entrance and while navigation is open. The menu button remains available throughout. Logo geometry, positioning and all page content remain unchanged; reduced-motion preferences disable the fade.
+
+Browser checks at 1280 × 720 and 390 × 844 confirmed a clear “Zes stappen” heading, logo visibility in the open menu, hiding again when that menu closes away from the top, and restoration when the logo returns the page to the start. The HTML change is only the stylesheet version; `git diff --check` passed.
+
+
 ## Update — 22 September 2026: six development steps
 
 The former ten-case slider now presents six numbered steps using the user's exact titles and copy: Aankoopanalyse, Businesscase, Herindeling & ontwerp, Vergunningen, Uitvoering and Commerciële afronding. Added the heading “Zes stappen. Regie van aankoop tot afronding.” and supplied introduction above it. “Client” is now “Stap”; the section label is “Onze werkwijze”.
