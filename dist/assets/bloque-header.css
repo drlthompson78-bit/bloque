@@ -1,0 +1,50 @@
+/* Fixed BLOQUE wordmark, aligned with the existing menu control. */
+.hamburger__fixed > .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2em;
+}
+.bloque-brand {
+  --wordmark-ink: #191b20;
+  --wordmark-accent: var(--color-primary, #ff4600);
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  width: clamp(158px, 12em, 232px);
+  min-height: max(44px, var(--btn-height));
+  color: var(--wordmark-ink);
+  pointer-events: auto;
+  text-decoration: none;
+  transition: color .3s ease;
+}
+.bloque-brand svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.bloque-wordmark__accent {
+  fill: var(--wordmark-accent);
+  transition: fill .3s ease;
+}
+.bloque-brand:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 8px;
+}
+[data-theme-nav="dark"] .bloque-brand {
+  --wordmark-ink: #fff;
+}
+/* On orange panels the inverse accent keeps the Q tail visible. */
+[data-bg-nav="orange"] .bloque-brand,
+[data-navigation-status="active"] .bloque-brand {
+  --wordmark-ink: #fff;
+  --wordmark-accent: #191b20;
+}
+@media (max-width: 479px) {
+  .bloque-brand { width: 158px; }
+  .hamburger__fixed > .container { gap: 1em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bloque-brand, .bloque-wordmark__accent { transition: none; }
+}

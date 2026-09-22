@@ -1,5 +1,12 @@
 # PROJECT HANDOFF — BLOQUE vastgoed website
 
+## Update — 22 September 2026: BLOQUE header wordmark
+
+Added a fixed BLOQUE wordmark at the top left, aligned with the existing menu control. The broad Helvetica Now Extended 800 display face observed on monks.com provides the capital outlines; Q has a separately drawn straight diagonal in site orange `#FF4600`. The SVG remains sharp at all screen densities and needs no loaded font. Its editable master is `dist/assets/bloque-wordmark.svg`, with matching inline geometry in `dist/index.html`; see `brand/README.md`.
+
+`dist/assets/bloque-header.css` handles size, alignment, keyboard focus and the existing section/menu themes. On orange panels the mark uses white lettering with a dark tail for contrast. Clicking it closes navigation and returns to the top. The approved hero animation, payoff and Hallo/BLOQUE® sequence are unchanged. Browser checks passed at 1280 × 720 and 390 × 844: no logo/menu overlap, correct orange Q tail, and the logo closes the open menu and returns to the start.
+
+
 ## Update — 22 September 2026: orange infill after sinking
 
 The user accepted the sharper 4K scene, then requested the recessed L and Q to fill with site orange until level with the surrounding white floor. Both orange volumes share the exact floor-opening geometry, including the straight Q tail. The Q center stays white. Their un-beveled upper faces stop at z=0; B/O/U/E keep the approved graphite material and height. The orange material uses the site's `--color-primary` (`#FF4600`).
