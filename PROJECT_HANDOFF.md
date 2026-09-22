@@ -1,5 +1,17 @@
 # PROJECT HANDOFF — BLOQUE vastgoed website
 
+## Update — 23 September 2026: BLOQUE contact page
+
+Replaced the orange KRAVT contact/footer with a light contact section at `#contact`. The reference layout has the heading “Benieuwd wat wij kunnen betekenen?”, a form on the left and Rotterdam map/address on the right, stacked on mobile. It uses the existing Helvetica Now fonts and a floor-only render from the approved hero scene. `scene/render_contact_background.py` reproduces `dist/assets/bloque-contact-floor.jpg` without changing the hero .blend or animation. Run Blender 3.6 with `--background --gpu-backend opengl --factory-startup --python scene/render_contact_background.py`.
+
+Details: BLOQUE Vastgoed B.V., Westerkade 31/A, 3016 CM Rotterdam, Nederland; info@bloquevastgoed.nl. Removed the former Berlin address, KRAVT social/legal footer links and old footer logo. The remaining “Write us” mail link now also points to BLOQUE.
+
+The interactive map uses locally bundled Leaflet 1.9.4 (license included) and OpenStreetMap tiles, with monochrome cartography, an orange marker, zoom controls and a separate directions link. Its coordinates (51.90520213, 4.47503497) are the PDOK/BAG centroid for Westerkade 31A, 3016CM Rotterdam. Tiles load only once the map is visible. No API key is required.
+
+The user explicitly chose FormSubmit with one-time email activation. The form POSTs to `https://formsubmit.co/info@bloquevastgoed.nl`, includes native required/name/email validation, length limits, a honeypot, default service CAPTCHA, Reply-To via the email field and a custom subject. Company and phone are optional. There is no newsletter signup. Successful service submissions return to `/bedankt.html`. **Activation is still pending:** the first real submission triggers FormSubmit’s confirmation email to info@bloquevastgoed.nl; the owner must activate that link. No live test message has been sent, and mailbox delivery has not been verified. Do not claim delivery is proven before activation and a subsequent real test.
+
+Validation: desktop/mobile layout, real map tiles and marker popup, zoom control, no horizontal overflow on mobile, required-field and invalid-email blocking, form destination/configuration, thank-you page, JavaScript syntax and `git diff --check`. No other homepage sections or hero media were redesigned.
+
 ## Update — 22 September 2026: remove clients and vacancies
 
 Removed the two sections identified in the user's screenshots: “Who we worked for” (`home-clients`, including the old client list) and “Working for KRAVT” (`home-jobs`, including all vacancy links). Removed their complete sticky wrappers, spacers and overlays to avoid empty scrolling intervals, plus the “Clients” navigation item. The separate “Working at KRAVT” section and the remaining content are preserved.
