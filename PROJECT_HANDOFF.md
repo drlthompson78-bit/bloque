@@ -1,5 +1,12 @@
 # PROJECT HANDOFF — BLOQUE vastgoed website
 
+## Update — 22 September 2026: remove clients and vacancies
+
+Removed the two sections identified in the user's screenshots: “Who we worked for” (`home-clients`, including the old client list) and “Working for KRAVT” (`home-jobs`, including all vacancy links). Removed their complete sticky wrappers, spacers and overlays to avoid empty scrolling intervals, plus the “Clients” navigation item. The separate “Working at KRAVT” section and the remaining content are preserved.
+
+Validation: source comparison confirms only those two wrappers and the Clients menu item were removed. Every remaining navigation target resolves. Local browser checks confirmed both sections are absent, five menu entries remain and Contact navigation closes the menu. `git diff --check` passed.
+
+
 ## Update — 22 September 2026: prevent header logo overlapping copy
 
 The transparent fixed header no longer leaves the BLOQUE wordmark over section labels and headings. `bloque-header.css?v=3` uses the existing `data-scrolling-started` state: after scrolling beyond the top threshold the logo fades out, becomes hidden and stops receiving pointer/focus input. It reappears at the page entrance and while navigation is open. The menu button remains available throughout. Logo geometry, positioning and all page content remain unchanged; reduced-motion preferences disable the fade.
