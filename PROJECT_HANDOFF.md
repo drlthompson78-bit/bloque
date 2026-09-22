@@ -1,5 +1,9 @@
 # PROJECT HANDOFF — BLOQUE vastgoed website
 
+## Update — 23 September 2026: remove Let’s work together
+
+Removed the `home-about` section with its full sticky wrapper, spacer and overlay, including the old Jan Schulz-Berners introduction and Write us CTA. The separate Testimonials section is preserved. DOM comparison confirms all other markup is unchanged.
+
 ## Update — 23 September 2026: Impressie videos
 
 The former Working at KRAVT section (`#agency`, linked from Impressie) now has the visible heading Impressie. Its background video uses the supplied `slide-00.mp4` (1920×1080), saved as `bloque-impressie.mp4`, and `slide-00-mobile.mp4` (720×960), saved as `bloque-impressie-mobile.mp4`. Both originals are unchanged, H.264, 46.2 seconds. Posters were extracted from their first frames. The existing media initializer selects the mobile source at widths ≤767px, swaps sources when crossing that breakpoint, and retains lazy loading, muted looping inline playback, offscreen pause and page visibility behavior. Only this video has the new mobile-source attribute.
