@@ -1,0 +1,20 @@
+/* Helvetica Now: the regular and medium text faces used on monks.com. */
+@font-face {
+  font-family: "Helvetica Now";
+  src: url("./fonts/helvetica-now-regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Helvetica Now";
+  src: url("./fonts/helvetica-now-medium.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+body, .body,
+h1, h2, h3, h4, h5, h6, p, strong,
+.h1, .h2, .h3, .h4, .h5, .h6, .heading {
+  font-family: "Helvetica Now", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}

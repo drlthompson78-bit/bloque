@@ -1,5 +1,10 @@
 # PROJECT HANDOFF — BLOQUE vastgoed website
 
+## Update — 22 September 2026: Helvetica Now page text
+
+All HTML headings, paragraphs, navigation, button labels and inherited body text now use Helvetica Now, the regular and medium text faces verified on monks.com. The fonts are local WOFF2 assets in `dist/assets/fonts/`, applied by `dist/assets/bloque-typography.css` and preloaded in the head. Original text sizes, weights and the three forced hero lines remain. The page initialization in `18348.js` waits for fonts to settle before measuring animated text. The SVG wordmark, Hallo artwork and 3D scene are independent of this typeface change. Browser checks at 1280 × 720 and 390 × 844 confirmed local font requests, applied Helvetica Now styles, the three hero lines and working menu navigation.
+
+
 ## Update — 22 September 2026: BLOQUE header wordmark
 
 Added a fixed BLOQUE wordmark at the top left, aligned with the existing menu control. The broad Helvetica Now Extended 800 display face observed on monks.com provides the capital outlines; Q has a separately drawn straight diagonal in site orange `#FF4600`. The SVG remains sharp at all screen densities and needs no loaded font. Its editable master is `dist/assets/bloque-wordmark.svg`, with matching inline geometry in `dist/index.html`; see `brand/README.md`.

@@ -12,7 +12,8 @@ let durationDefaultFaster = 1.2;
 CustomEase.create("primary-ease", "0.62, 0.05, 0.01, 0.99");
 CustomEase.create("primary-ease-out", ".34, 1.56, 0.64, 1");
 
-initPageTransitions();
+// Measure animated text after the local typefaces have settled.
+document.fonts.ready.then(initPageTransitions);
 
 // Animation - Page Loader
 function initLoader() {

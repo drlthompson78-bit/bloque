@@ -7,3 +7,13 @@ Typography reference: https://www.monks.com/, inspected 22 September 2026. Its s
 The Q uses the same round body as O. Its straight diagonal is a separate path, filled with the site's `#FF4600`. Default ink is `#191B20`. The header turns white over dark content and uses white letters with a dark tail over orange content/menu panels so the accent remains legible. Styling, sizing and focus indication live in `dist/assets/bloque-header.css`.
 
 The link uses the existing `#start` anchor and navigation-close handlers. The approved hero movie and its typography are independent of this header logo.
+
+## Page typography
+
+The page text now uses Helvetica Now, matching the Monks reference's regular (400) and medium (500) text faces. The WOFF2 files are served locally from `dist/assets/fonts/`, preloaded in the document head, and assigned in `dist/assets/bloque-typography.css`. Their original font metadata is retained. Existing type sizes, weights and explicit headline lines remain in the original layout rules.
+
+The two source resources inspected on 22 September 2026 were:
+- Regular: https://www.monks.com/themes/custom/monks/static/fonts/5c2e1d99.woff2
+- Medium: https://www.monks.com/themes/custom/monks/static/fonts/882730d9.woff2
+
+Page animation initialization waits for `document.fonts.ready` so text splitting and scroll positions are measured with the final typeface.
