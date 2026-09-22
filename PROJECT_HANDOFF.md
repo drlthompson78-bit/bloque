@@ -1,12 +1,16 @@
 # PROJECT HANDOFF — BLOQUE vastgoed website
 
-## Update — 22 September 2026: continuous L/Q animation
+## Update — 22 September 2026: one real 3D scene
 
-This update supersedes older hosting and hero-animation details below. The active Site is now `appgprj_6ab244a5ea748191a4b6407688b3cc1e`, privately hosted at `https://bloque-vastgoed.drl-thompson78.chatgpt.site`. Use `.openai/hosting.json` and fresh Sites metadata as the authority.
+This update supersedes the older hosting and hero details below. The active Site is `appgprj_6ab244a5ea748191a4b6407688b3cc1e`, privately hosted at `https://bloque-vastgoed.drl-thompson78.chatgpt.site`. Use `.openai/hosting.json` and fresh Sites metadata as the authority.
 
-`dist/assets/bloque-sinking-logo.js` animates L then Q after a 1.5-second hold, with 2.85 seconds per letter. The first overlay implementation was rejected for light outlines and a visible shape/material change when handing back to the bitmap. The revised implementation uses shared contours for top faces, sidewalls and recesses, removes the baked bevel locally, and retains the rendered end state. Do not remove the canvas at completion or crossfade back to the original recess; that restores the mismatch. Reduced motion renders the settled state directly. The source hero bitmap and other letters remain intact. This is a reconstructed canvas relief, not an original editable 3D model; do not claim exact photographic equivalence.
+The user rejected both canvas-overlay versions for inconsistent letter forms, material and unrealistic recesses. That module has been removed. The new hero comes from one editable Blender scene containing all six letters, matching L/Q floor holes, a single camera and shared materials/lights. See `scene/README.md` for the source, rebuild commands and timeline. This is a 3D reconstruction, not the original KRAVT asset; do not claim pixel-identical equivalence.
 
-QA: local browser start/end inspection, console error check, and offline frame checks at desktop/mobile dimensions in `work/check-sinking-logo.cjs` (untracked). Visual acceptance belongs to the user.
+`dist/assets/bloque-hero-playback.js` plays `bloque-3d-sinking.mp4` after the page entrance. It has a 1.5-second raised hold, then L followed by Q. It retains the final video frame, pauses offscreen, and supplies the rendered recessed JPG for reduced motion or playback failure. The narrow-screen crop keeps the letter stack in view. The existing headline, descriptor, Hallo and vertical BLOQUE® transition are preserved.
+
+Validation: all 192 rendered frames decode at 1920 × 792; the final H.264 video is 8 seconds / 24 fps / approximately 295 KB. Browser playback reached the held final frame without console errors. Desktop (1600 × 900), narrow (800 × 900), and mobile (390 × 844) framing were visually checked. The playback checks cover entrance gating, visibility pause/resume, final-frame retention, reduced motion and error fallback.
+
+The production authority is `scene/bloque-studio.blend` plus the rendered video. The optional 3D Jutsu project `2892a976-6562-4b6d-a5a8-5030af396c64`, revision 2, is an editable cloud copy with a lightweight Eevee preview; its GLB viewer lighting differs from the production render. Visual acceptance remains with the user.
 
 ## 1. Project identity
 

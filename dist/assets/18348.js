@@ -240,7 +240,7 @@ function delay(n) {
  * Fire all scripts on page load
  */
 function initScript() {
-  window.BloqueSinkingLogo?.init();
+  window.BloqueHeroPlayback?.init();
   initCheckWindowHeight();
   initBasicFunctions();
   initLenisCheckScrollUpDown();
