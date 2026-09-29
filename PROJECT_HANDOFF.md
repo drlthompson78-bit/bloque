@@ -1,3 +1,9 @@
+# Current update — 29 September 2026
+
+GitHub static website synchronized from the published Lovable demo at https://bloque.rnvlijter.nl/. Lovable project: 3f9e2835-4f93-4466-8907-06e159664466, latest source commit 17d32b7d8833669cdfa48c68f9ce233b73270a4c. The repository retains its static dist/ structure and original scene sources. The Lovable framework wrapper is not required for this static copy.
+
+Includes mobile hero corrections, hidden testimonials, six-step placeholders, BLOQUE © browser metadata, and the exact Brandbits B® favicon requested by the user (v3 PNG icons). All 82 public files were retrieved; unchanged assets match the existing repository. Earlier deployment instructions below are historical; the current demo is hosted by Lovable.
+
 # PROJECT HANDOFF — BLOQUE vastgoed website
 
 ## Update — 23 September 2026: remove Let’s work together
